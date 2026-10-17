@@ -1,0 +1,22 @@
+name: oi
+on:
+  schedule:
+    - cron: "10 * * * 1-5"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests
+      - run: python fetch_oi.py
+      - run: git config user.name bot
+      - run: git config user.email bot@users.noreply.github.com
+      - run: git add -A
+      - run: git diff --cached --quiet || git commit -m oi
+      - run: git push
